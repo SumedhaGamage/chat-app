@@ -12,6 +12,7 @@ services:
             build: .
             volumes:
                 - .:/app
+                - /app/node_modules
             ports:
                 - "80:3000"
             links:

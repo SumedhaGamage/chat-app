@@ -22,4 +22,22 @@ function addElement(message) {
   // add the newly created element and its content into the DOM
   var currentDiv = document.getElementById("div1");
   document.body.insertBefore(newDiv, currentDiv);
-}
+};
+
+function sendMessage() {
+  let from = document.getElementById('form')
+    .value
+  let text = document.getElementById('text')
+    .value
+  socket.emit('createMessge', generateMessage(from, text));
+
+};
+
+var generateMessage = function generateMessage(from, text) {
+  return {
+    from,
+    text,
+    createdAt: new Date()
+      .getTime()
+  }
+};
