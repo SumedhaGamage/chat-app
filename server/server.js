@@ -5,7 +5,10 @@ const socketIO = require('socket.io');
 const {
   generateMessage
 } = require('./utils/message');
-
+const mongoose = require('mongoose');
+const Message = require('./model/message');
+//mongoose.Promise = Promise.global;
+mongoose.connect(`mongodb://mongo:27017/chat`);
 const publicPath = path.join(__dirname + '/../public');
 
 const app = express();
@@ -24,7 +27,11 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
   socket.on('createMessge', (message) => {
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    let newMessage = generateMessage(message.from, message.text);
+    Message.create(newMessage)
+      .then(() => {
+        io.emit('newMessage', newMessage);
+      });
   });
 });
 
